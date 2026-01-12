@@ -8,6 +8,7 @@ from gr00t.data.dataset.sharded_single_step_dataset import ShardedSingleStepData
 from gr00t.data.embodiment_tags import EmbodimentTag
 from gr00t.data.interfaces import BaseProcessor
 from gr00t.data.stats import generate_rel_stats, generate_stats
+import torch.distributed as dist  ##
 
 
 class DatasetFactory:
@@ -45,7 +46,8 @@ class DatasetFactory:
                 else:
                     generate_stats(dataset_path)
                     generate_rel_stats(dataset_path, EmbodimentTag(embodiment_tag))
-                torch.distributed.barrier()
+                if dist.is_available() and dist.is_initialized():  ## 
+                    torch.distributed.barrier()
                 dataset = ShardedSingleStepDataset(
                     dataset_path=dataset_path,
                     embodiment_tag=EmbodimentTag(embodiment_tag),
