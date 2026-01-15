@@ -35,9 +35,9 @@ uv run bash examples/MAV_SHELF/finetune_dual.sh
 Evaluate the finetuned model with the following command:
 ```bash
 uv run python gr00t/eval/open_loop_eval.py \
-  --dataset-path examples/SO100/finish_sandwich_lerobot \
+  --dataset-path data/MAV_Shelf_GR00T_low_vel \
   --embodiment-tag NEW_EMBODIMENT \
-  --model-path /tmp/so100_finetune/checkpoint-10000 \
+  --model-path log/mav_finetune_low_vel/checkpoint-30000 \
   --traj-ids 0 \
   --action-horizon 16 \
   --steps 400
@@ -68,6 +68,14 @@ uv pip install --no-deps -e ../../../../
 uv run python gr00t/eval/run_gr00t_server.py \
   --model-path /tmp/so100_finetune/checkpoint-10000 \
   --embodiment-tag NEW_EMBODIMENT 
+```
+```bash
+uv run python gr00t/eval/run_gr00t_server.py \
+    --embodiment-tag NEW_EMBODIMENT \
+    --model-path  log/mav_finetune_low_vel/checkpoint-30000\
+    --device cuda:0 \
+    --host 0.0.0.0 \
+    --port 5555
 ```
 
 3. Run the eval script, as client.

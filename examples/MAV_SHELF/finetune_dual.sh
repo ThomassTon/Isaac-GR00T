@@ -6,14 +6,14 @@ export NUM_GPUS=1
 CUDA_VISIBLE_DEVICES=0 python \
     gr00t/experiment/launch_finetune.py \
     --base_model_path nvidia/GR00T-N1.6-3B \
-    --dataset_path  demo_data/MAV_Shelf_GR00T \
+    --dataset_path  data/MAV_Shelf_GR00T_low_vel_pos \
     --modality_config_path examples/MAV_SHELF/mav_config.py \
     --embodiment_tag NEW_EMBODIMENT \
     --num_gpus $NUM_GPUS \
-    --output_dir /tmp/mav_finetune \
-    --save_steps 1000 \
-    --save_total_limit 5 \
-    --max_steps 10000 \
+    --output_dir log/mav_finetune_low_vel_pos \
+    --save_steps 5000 \
+    --save_total_limit 20 \
+    --max_steps 50000 \
     --warmup_ratio 0.05 \
     --weight_decay 1e-5 \
     --learning_rate 1e-4 \
