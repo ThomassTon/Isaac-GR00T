@@ -54,3 +54,5 @@ class EmbodimentTag(Enum):
     """
     Any new embodiment.
     """
+
+    MAV = "mav"
