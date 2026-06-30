@@ -343,6 +343,14 @@ class Gr00tPolicy(BasePolicy):
             model_pred = self.model.get_action(**collated_inputs)
         normalized_action = model_pred["action_pred"].float()
 
+        # Step 4b: Mean-pool the backbone (VLM) features over the token sequence ->
+        # one embedding vector per sample, exposed for downstream latent-RL use.
+        info: dict[str, Any] = {}
+        if "backbone_features" in model_pred:
+            emb = model_pred["backbone_features"].float()  # (B, seq_len, D)
+            emb = emb.mean(dim=1)  # (B, D)
+            info["embedding"] = emb.cpu().numpy().astype(np.float32)
+
         # Step 5: Decode actions from normalized space back to physical units
         batched_states = {}
         for k in self.modality_configs["state"].modality_keys:
@@ -355,7 +363,7 @@ class Gr00tPolicy(BasePolicy):
         casted_action = {
             key: value.astype(np.float32) for key, value in unnormalized_action.items()
         }
-        return casted_action, {}
+        return casted_action, info
 
     def check_action(self, action: dict[str, Any]) -> None:
         """Validate that the action has the correct structure and types.
