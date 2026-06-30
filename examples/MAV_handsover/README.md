@@ -34,7 +34,7 @@ source .venv/bin/activate
 
 Run the finetuning script using absolute joint positions (feel free to experiment with relative positions):
 ```bash
-uv run bash examples/MAV_SORT/finetune_dual.sh
+uv run bash examples/MAV_handsover/finetune_dual.sh
 ```
 
 ## Open-Loop Evaluation
@@ -42,12 +42,12 @@ uv run bash examples/MAV_SORT/finetune_dual.sh
 Evaluate the finetuned model with the following command:
 ```bash
 uv run python gr00t/eval/open_loop_eval.py \
-  --dataset-path data/MAV_Sort \
+  --dataset-path data/Tasks_2 \
   --embodiment-tag MAV \
-  --model-path log/mav_finetune_sort/checkpoint-50000 \
+  --model-path log/Tasks_2/checkpoint-20000 \
   --traj-ids 0 \
   --action-horizon 16 \
-  --steps 800
+  --steps 200
 ```
 
 ### Evaluation Results
@@ -75,7 +75,7 @@ uv pip install --no-deps -e ../../../../
 ```bash
 uv run python gr00t/eval/run_gr00t_server.py \
     --embodiment-tag MAV \
-    --model-path  log/mav_finetune_sort_EEF/checkpoint-50000\
+    --model-path  log/MAV_Tasks_new_cam_low_pd/checkpoint-40000\
     --device cuda:0 \
     --host 0.0.0.0 \
     --port 5555
