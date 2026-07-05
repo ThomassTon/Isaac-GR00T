@@ -343,13 +343,18 @@ class Gr00tPolicy(BasePolicy):
             model_pred = self.model.get_action(**collated_inputs)
         normalized_action = model_pred["action_pred"].float()
 
-        # Step 4b: Mean-pool the backbone (VLM) features over the token sequence ->
-        # one embedding vector per sample, exposed for downstream latent-RL use.
+        # Step 4b: Expose the FULL VLA backbone (VLM) token sequence for the RL-token
+        # (RLT) readout downstream (transformer encoder-decoder over the sequence).
+        # NOTE: this is large (seq_len x D); it is consumed transiently to compute a
+        # compact z_rl and is NOT stored in any replay buffer.
         info: dict[str, Any] = {}
         if "backbone_features" in model_pred:
-            emb = model_pred["backbone_features"].float()  # (B, seq_len, D)
-            emb = emb.mean(dim=1)  # (B, D)
-            info["embedding"] = emb.cpu().numpy().astype(np.float32)
+            tok = model_pred["backbone_features"].float()  # (B, seq_len, D)
+            # Pooled embedding (D,) for the pooled-latent agents; full token sequence
+            # (seq_len, D) for the RL-token (RLT) readout. The full sequence is large
+            # and consumed transiently to compute a compact z_rl (never buffered).
+            info["embedding"] = tok.mean(dim=1)[0].cpu().numpy().astype(np.float32)  # (D,)
+            info["vla_tokens"] = tok[0].cpu().numpy().astype(np.float32)              # (seq_len, D)
 
         # Step 5: Decode actions from normalized space back to physical units
         batched_states = {}
