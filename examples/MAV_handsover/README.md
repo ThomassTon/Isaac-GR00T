@@ -75,7 +75,7 @@ uv pip install --no-deps -e ../../../../
 ```bash
 uv run python gr00t/eval/run_gr00t_server.py \
     --embodiment-tag MAV \
-    --model-path  log/MAV_Tasks_new_cam_low_pd/checkpoint-40000\
+    --model-path  log/MAV_Tasks_CAN/checkpoint-40000\
     --device cuda:0 \
     --host 0.0.0.0 \
     --port 5555
