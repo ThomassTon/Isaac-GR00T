@@ -6,7 +6,7 @@ This repository is a fork of NVIDIA Isaac GR00T. For the upstream documentation 
 
 ## What this is
 
-Isaac GR00T N1.6 is an open vision-language-action (VLA) model: it takes camera images, robot state and a language instruction, and outputs continuous action chunks. The pretrained 3B checkpoint ([`nvidia/GR00T-N1.6-3B`](https://huggingface.co/nvidia/GR00T-N1.6-3B)) is used as a base model, and we post-train it on our own robot data with the `MAV` embodiment tag.
+Isaac GR00T N1.7 is an open vision-language-action (VLA) model: it takes camera images, robot state and a language instruction, and outputs continuous action chunks. The pretrained 3B checkpoint ([`nvidia/GR00T-N1.7-3B`](https://huggingface.co/nvidia/GR00T-N1.7-3B)) is used as a base model, and we post-train it on our own robot data with the `MAV` embodiment tag.
 
 The workflow is:
 

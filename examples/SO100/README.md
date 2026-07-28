@@ -14,20 +14,27 @@ Visualize it with this [link](https://huggingface.co/spaces/lerobot/visualize_da
 ## Handling the dataset
 
 ```bash
-uv run python scripts/lerobot_conversion/convert_v3_to_v2.py --repo-id izuluaga/finish_sandwich \
+uv run --project scripts/lerobot_conversion \
+  python scripts/lerobot_conversion/convert_v3_to_v2.py \
+  --repo-id izuluaga/finish_sandwich \
   --root examples/SO100/finish_sandwich_lerobot
 ```
 
-Then move the `modality.json` file to the root of the dataset.
+Then copy the `modality.json` file into the dataset's `meta/` directory:
 ```bash
-cp modality.json examples/SO100/finish_sandwich_lerobot/meta/modality.json
+cp examples/SO100/modality.json examples/SO100/finish_sandwich_lerobot/izuluaga/finish_sandwich/meta/modality.json
 ```
 
 ## Finetuning
 
-Run the finetuning script using absolute joint positions (feel free to experiment with relative positions):
+Run the shared finetune launcher directly, using absolute joint positions (feel free to experiment with relative positions):
 ```bash
-uv run bash examples/SO100/finetune_so100.sh
+CUDA_VISIBLE_DEVICES=0 NUM_GPUS=1 uv run bash examples/finetune.sh \
+  --base-model-path nvidia/GR00T-N1.7-3B \
+  --dataset-path examples/SO100/finish_sandwich_lerobot/izuluaga/finish_sandwich \
+  --modality-config-path examples/SO100/so100_config.py \
+  --embodiment-tag NEW_EMBODIMENT \
+  --output-dir /tmp/so100_finetune
 ```
 
 ## Open-Loop Evaluation
@@ -35,11 +42,11 @@ uv run bash examples/SO100/finetune_so100.sh
 Evaluate the finetuned model with the following command:
 ```bash
 uv run python gr00t/eval/open_loop_eval.py \
-  --dataset-path examples/SO100/finish_sandwich_lerobot \
+  --dataset-path examples/SO100/finish_sandwich_lerobot/izuluaga/finish_sandwich/ \
   --embodiment-tag NEW_EMBODIMENT \
   --model-path /tmp/so100_finetune/checkpoint-10000 \
   --traj-ids 0 \
-  --action-horizon 16 \
+  --execution-horizon 16 \
   --steps 400
 ```
 
@@ -47,7 +54,9 @@ uv run python gr00t/eval/open_loop_eval.py \
 
 The evaluation produces visualizations comparing predicted actions against ground truth trajectories:
 
-<img src="../../media/open_loop_eval_so100.png" width="800" alt="Open-loop evaluation results showing predicted vs ground truth trajectories" />
+<img src="../../media/open_loop_eval_so100.jpg" width="800" alt="Open-loop evaluation results showing predicted vs ground truth trajectories" />
+
+To read these numbers and decide whether your fine-tune is working, see [Interpreting the Result: Is My Fine-tune Working?](../../getting_started/finetune_new_embodiment.md#interpreting-the-result-is-my-fine-tune-working).
 
 ## Closed-Loop Evaluation
 
@@ -63,17 +72,18 @@ uv pip install -e . --verbose
 uv pip install --no-deps -e ../../../../
 ```
 
-2. Start policy server
+2. Start policy server from the repository root in a separate terminal:
 ```bash
 uv run python gr00t/eval/run_gr00t_server.py \
   --model-path /tmp/so100_finetune/checkpoint-10000 \
   --embodiment-tag NEW_EMBODIMENT 
 ```
 
-3. Run the eval script, as client.
+3. Run the eval script as the client from the `gr00t/eval/real_robot/SO100` environment created above:
 ```bash
-uv run python gr00t/eval/real_robot/SO100/eval_so100.py 
+uv run python eval_so100.py \
   --robot.type=so101_follower --robot.port=/dev/ttyACM2 \
   --robot.id=orange_follower \
-  --robot.cameras="{ wrist: {type: opencv, index_or_path: 2, width: 640, height: 480, fps: 30}, front: {type: opencv, index_or_path: 6, width: 640, height: 480, fps: 30}}" --policy_host=localhost --policy_port=5555 --lang_instruction="cube into green bowl"
+  --robot.cameras="{ wrist: {type: opencv, index_or_path: 2, width: 640, height: 480, fps: 30}, front: {type: opencv, index_or_path: 6, width: 640, height: 480, fps: 30}}" \
+  --policy-host=localhost --policy-port=5555 --lang-instruction="finish the ham cheese olives sandwich"
 ```

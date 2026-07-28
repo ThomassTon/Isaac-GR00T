@@ -5,7 +5,7 @@ export NUM_GPUS=1
 # torchrun --nproc_per_node=$NUM_GPUS --master_port=29500 \
 CUDA_VISIBLE_DEVICES=0 python \
     gr00t/experiment/launch_finetune.py \
-    --base_model_path nvidia/GR00T-N1.6-3B \
+    --base_model_path nvidia/GR00T-N1.7-3B \
     --dataset_path  data/MAV_Tasks_CAN \
     --modality_config_path examples/MAV_handsover/mav_config.py \
     --embodiment_tag MAV \
