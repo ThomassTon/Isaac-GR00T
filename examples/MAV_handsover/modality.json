@@ -1,0 +1,62 @@
+{
+    "state": {
+        "eef_xyz_left":{
+            "start": 12,
+            "end": 15
+        },
+        "eef_quat_left":{
+            "start": 15,
+            "end": 19
+        },
+        "eef_xyz_right":{
+            "start": 19,
+            "end": 22
+        },
+        "eef_quat_right":{
+            "start": 22,
+            "end": 26
+        },
+        "gripper": {
+            "start": 26,
+            "end": 28
+        }
+    },
+    "action": {
+         "eef_xyz_left":{
+            "start": 12,
+            "end": 15
+        },
+        "eef_quat_left":{
+            "start": 15,
+            "end": 19
+        },
+        "eef_xyz_right":{
+            "start": 19,
+            "end": 22
+        },
+        "eef_quat_right":{
+            "start": 22,
+            "end": 26
+        },
+        "gripper": {
+            "start": 26,
+            "end": 28
+        }
+    },
+    "video": {
+        "head": {
+            "original_key": "observation.images.head_view"
+        },
+        "wrist_left": {
+            "original_key": "observation.images.wrist_left_view"
+        },
+        "wrist_right": {
+            "original_key": "observation.images.wrist_right_view"
+        }
+    },
+    "annotation": {
+        "human.task_description": {
+            "original_key": "task_index"
+        }
+    }
+}

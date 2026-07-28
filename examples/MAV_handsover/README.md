@@ -1,6 +1,6 @@
-# Finetuning SO100 Model
+# Finetuning MAV VLA Model
 
-This guide shows how to finetune dataset collected from [SO100](https://huggingface.co/docs/lerobot/en/so101) robot, and evaluate the model on the real robot.
+
 
 
 ## Dataset
@@ -13,20 +13,16 @@ Visualize it with this [link](https://huggingface.co/spaces/lerobot/visualize_da
 
 ## Handling the dataset
 
-```bash
-uv run python scripts/lerobot_conversion/convert_v3_to_v2.py --repo-id izuluaga/finish_sandwich \
-  --root examples/SO100/finish_sandwich_lerobot
-```
 
 Then move the `modality.json` file to the root of the dataset.
 ```bash
-cp modality.json examples/SO100/finish_sandwich_lerobot/meta/modality.json
+cp modality.json examples/MAV_handsover/modality.json
 ```
 
 ## Activate environment
 
 ```bash
-cd haolei/Isaac-GR00T/
+cd Isaac-GR00T/
 source .venv/bin/activate
 ```
 
